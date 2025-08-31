@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牧之网课培训平台</title>
+    <style>
+        /* 全局样式设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8f9fa; /* 浅白色背景 */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* 页面容器 */
+        .container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 左侧导航栏样式 */
+        .sidebar {
+            width: 300px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            padding: 20px;
+            margin-right: 20px;
+            height: calc(100vh - 40px); /* 减去容器的padding */
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        /* 导航栏平台样式 */
+        .nav-title {
+            font-size: 1.4rem; /* 字体大小 */
+            font-weight: 600;/* 字体粗细为 600（半粗）*/
+            color: #1976d2;
+            margin-bottom: 20px;/* 外边距 */
+            padding-bottom: 16px;/* 内边距 */
+            border-bottom: 4px solid #3498db;/*底部添加 4px 宽的蓝色实线边框，作为分隔线 */
+        }
+        
+        /* 导航项列表 */
+        .nav-items {
+            list-style: none;
+        }
+        
+        /* 导航列表容器样式 - 添加分隔线并优化交互 */
+        .nav-item {
+            margin-bottom: 0;
+            border-radius: 6px;/*圆角边框效果*/
+            transition: all 0.3s ease; /* 过渡动画 */
+            border-bottom: 1px solid #DDDDDD; /* 添加底部边框作为分隔线 */
+        }
+        
+        /* 最后一个导航项移除底部边框 */
+        .nav-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* 导航列表文字链接样式 */
+        .nav-link {
+            display: block;
+            padding: 12px 16px;/*上下、左右内边距*/
+            color: #555;
+            text-decoration: none;/*去除链接默认下划线*/
+            border-radius: 6px;/*圆角边框效果*/
+            font-size: 1.1rem;/* 字体大小 */
+            font-weight: 600; /* 添加或修改这行，600为半粗，700为全粗 */
+            transition: all 0.3s ease;/* 过渡动画 */
+            position: relative;/* 设置相对定位，为可能的子元素绝对定位提供参考 */
+            overflow: hidden;/* 隐藏超出元素边界的内容，通常在动画效果时出现意外显示 */
+        }
+        
+        /* 导航项悬浮效果 */
+        .nav-link:hover {
+            background-color: #e3f2fd;/* 鼠标悬停时，链接的背景色变为淡蓝色*/
+            color: #1976d2;/*悬停时文字颜色变为深蓝*/
+            transform: translateX(4px);/*悬停时元素向右平移 4 像素，产生轻微的位移动画效果*/
+        }
+        
+        /* 导航项选中效果 - 优化高亮显示 */
+        .nav-link.active {
+            background-color: #2196f3;/*选中下的背景色设置为蓝色*/
+            color: white;/*选中下文字颜色设置为白色*/
+            font-weight: 500;/*文字粗细*/
+            box-shadow: 0 3px 6px rgba(33, 150, 243, 0.2);/*添加轻微的阴影效果 */
+        }
+        
+        /* 搜索匹配项的高亮效果 */
+        .nav-link.search-match {
+            animation: pulse 1.5s infinite;
+            background-color: #e8f5e9;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }/* 搜索匹配的导航项上产生持续 1.5 秒的呼吸效果（阴影扩张再消失），并无限循环*/
+        
+        /* 右侧内容区域 */
+        .content {
+            flex: 1;
+            background-color: #ffffff;/*内容区域背景*/
+            border-radius: 8px;/*添加 8px 的圆角边框 */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);/*添加轻微的阴影效果 */
+            padding: 30px;
+            overflow-y: auto;/*显示滚动条*/
+            height: calc(100vh - 40px); /* 减去容器的padding */
+        }
+        
+        /* 搜索区域样式 */
+        .search-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            display: flex;/*弹性布局排列*/
+            gap: 10px;/*搜索输入框和搜索按钮）之间间距*/
+            margin-bottom: 10px;
+        }
+        /*搜索框样式*/
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        /*搜索框选中样式*/
+        .search-input:focus {
+            outline: none;
+            border-color: #2196f3;/*点击搜索框，边框变色*/
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);/*阴影*/
+        }
+        /*搜索按钮*/
+        .search-button {
+            padding: 12px 20px;
+            background-color: #2196f3;/*按钮背景色*/
+            color: white;/*文字色*/
+            border: none;/*    */
+            border-radius: 6px;/*圆角边框*/
+            cursor: pointer;/*变小手*/
+            font-size: 1rem;/*字大小*/
+            transition: background-color 0.3s ease;/*平滑过渡动画*/
+        }
+        /*搜索按钮悬停*/
+        .search-button:hover {
+            background-color: #1976d2;
+        }
+        /*搜索中途显示*/
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .search-result-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        /*搜索结果栏悬停效果*/
+        .search-result-item:hover {
+            background-color: #f5f9ff;
+        }
+        /*搜索匹配红色文本*/
+        .search-result-item .highlight {
+            color: #e53935;
+            font-weight: 500;
+        }
+        
+        /* 右侧内容标题样式 */
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1976d2;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e3f2fd;
+        }
+        
+        /* 内容文字样式 */
+        .content p {
+            margin-bottom: 16px;
+            font-size: 1.2rem;/*文字大小*/
+            line-height: 1.7;/*行高*/
+            letter-spacing: 1px;
+            color: #000;
+        }
+        
+        /* 内容图片样式 */
+        .content-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 0px 0;/*外边距*/
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        /* 图片悬浮效果 */
+        .content-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 内容链接样式 */
+        .content a {
+            color: #2196f3;
+            text-decoration: none;/*移除下划线*/
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;/*悬停状态下显示边框*/
+        }
+        
+        /* 内容链接悬浮效果 */
+        .content a:hover {
+            color: #1565c0;
+            border-bottom: 1px solid #2196f3;
+        }
+
+         
+        /* 内容里卡片样式 */
+        .content-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;/*卡片左侧添加 4px 宽的蓝色实线边框*/
+        }
+
+
+        /* 文字悬浮出现图片.................................................................................. */
+        /* 基础样式 */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            font-size: 1.2rem;
+        }
+        
+        /* 蓝色文字样式 */
+        .blue-hover-text {
+            color: #165DFF; /* 蓝色 */
+            text-decoration: underline;
+            cursor: pointer;
+            position: relative; /* 为图片定位做准备 */
+            display: inline-block;
+        }
+        
+        /* 图片容器样式 */
+        .hover-image {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 100%; /* 位于文字正下方 */
+            margin-top: 8px; /* 与文字保持一点距离 */
+            width: 180px; /* 图片宽度 */
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: none; /* 默认隐藏 */
+            z-index: 100; /* 确保图片显示在其他内容上方 */
+            /* 悬浮动画动画相关属性 */
+            opacity: 0;
+            transform: translateX(-50%) translateY(10px);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+          
+        }
+        
+        /* 鼠标悬停时显示图片 */
+        .blue-hover-text:hover .hover-image {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+          
+        }
+        
+
+    
+
+      
+        
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* 移动端菜单按钮悬浮效果 */
+        .menu-toggle:hover {
+            background-color: #1976d2;
+        }
+        
+        /* 移动端响应式设计 */
+        @media (max-width: 768px) {
+            /* 调整容器布局 */
+            .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            /* 显示移动端菜单按钮 */
+            .menu-toggle {
+                display: block;
+            }
+            
+            /* 默认隐藏侧边栏 */
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 0;
+                overflow: hidden;
+                margin-right: 0;
+                margin-bottom: 20px;
+                transition: max-height 0.3s ease;
+            }
+            
+            /* 侧边栏展开状态 - 优化滚动体验 */
+            .sidebar.active {
+                max-height: 70vh; /* 限制最大高度为视口的70%，确保能滚动 */
+                overflow-y: auto; /* 强制显示滚动条 */
+                -webkit-overflow-scrolling: touch; /* 优化iOS设备上的滚动体验 */
+            }
+            
+            /* 调整内容区域高度 */
+            .content {
+                height: auto;
+                min-height: calc(100vh - 200px);
+                padding: 20px;
+            }
+            
+            /* 调整内容标题大小 */
+            .content-title {
+                font-size: 1.6rem;
+            }
+            
+            /* 调整搜索框样式 */
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-button {
+                width: 100%;
+            }
+        }
+        
+        /* 滚动条样式美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        /*弹窗内容样式*/
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+        
+        .modal-message {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .modal-button {
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .modal-button:hover {
+            background-color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 移动端菜单按钮 -->
+        <button class="menu-toggle">☰ 导航栏</button>
+        
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <h2 class="nav-title">牧之网课培训平台</h2>
+            <ul class="nav-items">
+                <li class="nav-item"><a href="#section1" class="nav-link active">首页</a></li>
+                <li class="nav-item"><a href="#section2" class="nav-link">25年暑假研修（中小学）</a></li>
+                <li class="nav-item"><a href="#section3" class="nav-link">25年暑假研修（职教、高教）</a></li>
+                <li class="nav-item"><a href="#section4" class="nav-link">安徽继续教育公需课</a></li>
+                <li class="nav-item"><a href="#section5" class="nav-link">河南继续教育公需课</a></li>
+                <li class="nav-item"><a href="#section6" class="nav-link">25年秋季学期人教版义教新教材网络培训和答疑活动</a></li>
+                <li class="nav-item"><a href="#section7" class="nav-link">习近平新时代中国特色社会主义思想学生读本初中、高中网络培训</a></li>
+                <li class="nav-item"><a href="#section8" class="nav-link">学习公社</a></li>
+                <li class="nav-item"><a href="#section9" class="nav-link">山东教师教育网</a></li>
+                <li class="nav-item"><a href="#section10" class="nav-link">2022年版新课标国家级示范培训</a></li>
+                <li class="nav-item"><a href="#section11" class="nav-link">广东省教师继续教育公需课</a></li>
+                <li class="nav-item"><a href="#section12" class="nav-link">甘肃酒泉市专技继续教育公需课、专业课</a></li>
+                <li class="nav-item"><a href="#section13" class="nav-link">甘肃新科技专修学院继续教育公需课、专业课</a></li>
+                <li class="nav-item"><a href="#section14" class="nav-link">枣庄市专业技术人员继续教育公需课</a></li>
+                <li class="nav-item"><a href="#section15" class="nav-link">2025宿州中小学转岗教师培训</a></li>
+                <li class="nav-item"><a href="#section16" class="nav-link">待加新项目</a></li>
+                <li class="nav-item"><a href="#section17" class="nav-link">待加新项目</a></li>
+
+              
+            </ul>
+        </aside>
+        
+        <!-- 右侧内容区域 -->
+        <main class="content">
+            <!-- 搜索区域 -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="请输入您要培训的课程题目">
+                    <button class="search-button">搜索</button>
+                </div>
+                <div class="search-results" style="display: none;"></div>
+            </div>
+            
+            <!-- 弹窗提示 -->
+            <div class="modal" id="noResultModal">
+                <div class="modal-content">
+                    <p class="modal-message">暂时没有相关课程，请联系作者查询。</p>
+                    <button class="modal-button" id="closeModal">确定</button>
+                </div>
+            </div>
+            
+            <!-- 首页内容 -->
+            <div id="section1" class="content-section">
+                <h1 class="content-title">温馨提示</h1>
+                <p>欢迎访问本网站！感谢您的信赖与支持。
+                <br>您可以通过<span style="font-weight: 900;font-size: 24px;color: #2B6FD5;">导航栏</span>，查看相关培训及详细内容，
+                  也可在上方进行<span style="font-weight: 900;font-size: 24px;color: #2B6FD5;">搜索</span>。
+                  <br><span style="color: #FF6600;font-size: 20px;font-weight: bold;">如没有你要学的项目，请联系管理员</span>。</p>
+                <!--<img src="https://picsum.photos/id/1/800/400" alt="首页图片" class="content-image">-->
+                <div class="content-card">
+                    <p>我们的宗旨是：<span style="color: #FF6600;font-size: 22px;font-weight: bold;">为教师们减负！把休息时间还给你们！！！绝对高效！诚信！</span>
+                    <br>凭借多年的行业经验，赢得了良好的口碑。</p>
+                </div>
+                
+                <p>如果您有任何问题或需求，请随时<span class="blue-hover-text">
+            微信联系
+            <img src="imgs/微信.png" alt="微信" class="hover-image"></span>，本站将竭诚为您服务。</p>
+            </div>
+            
+            <!-- 其他内容区域 -->
+            <div id="section2" class="content-section" style="display: none;">
+                <h1 class="content-title">25年暑假研修（中小学）</h1>
+                <p>【2025年暑期教师研修】是所有老师都要学习的，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/中小学研修.png " alt="中小学研修图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://basic.smartedu.cn/training/2025sqpx" target="_blank">国家中小学智慧教育平台https://basic.smartedu.cn/training/2025sqpx   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">9月30</span>。
+                    </p>
+                </div>
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section3" class="content-section" style="display: none;">
+                <h1 class="content-title">25年暑假研修（职教、高教）</h1>
+                <p>【这是职业教育和高等教育的2025暑期教师研修】，这两个是不同的网址，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/职教研修.png " alt="职教研修图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://teacher.vocational.smartedu.cn/h/subject/summer2025/" target="_blank">职教  https://teacher.vocational.smartedu.cn/h/subject/summer2025/   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href=" ">高教  https://      可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">9月30</span>。
+                    </p>
+                </div>
+                <!-- 其他内容省略 -->
+            </div>
+            
+            
+            <div id="section4" class="content-section" style="display: none;">
+                <h1 class="content-title">安徽继续教育公需课</h1>
+                <p>安徽继续教育公需课，四选一模式，任意学完一个科目就行，本平台学习【科目一】和【科目四】，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/安徽科一.png " alt="安徽科一图片" class="content-image"><br>
+                <img src="imgs/安徽科四.png " alt="安徽科四图片" class="content-image"><br>
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">身份证号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://www.zjzx.ah.cn/" target="_blank">科目一-安徽开放大学继续教育平台  https://www.zjzx.ah.cn/   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href=" https://jxjypx.aust.edu.cn/" target="_blank">科目四-安徽理工大学继续教育平台  https://jxjypx.aust.edu.cn/     可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">26年5月31</span>。
+                    </p>
+                </div>
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section5" class="content-section" style="display: none;">
+                <h1 class="content-title">河南继续教育公需课</h1>
+                <p>【河南继续教育公需课】，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/河南工业职业技术学院.png " alt="河南继续教育公需课图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">身份证号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="http://hnpi.newzhihui.cn/" target="_blank">河南工业职业学院继续教育学习平台  http://hnpi.newzhihui.cn/   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">8月31</span>。
+                    
+                    </p>
+                </div>
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section6" class="content-section" style="display: none;">
+                <h1 class="content-title">25年秋季学期人教版义教新教材网络培训和答疑活动</h1>
+                <p>【25年秋季学期人教版义务教育新教材的培训和在线答疑活动】。这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/新教材.png " alt="25年秋季学期人教版义务教育新教材的培训和在线答疑活动图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://wp.pep.com.cn/web/index.php?/login/index/165/1/=" target="_blank">人教教师培训服务平台  https://wp.pep.com.cn/web/index.php?/login/index/165/1/=    可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">9月15</span>。
+                    
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 其余内容区域省略 -->
+            <div id="section7" class="content-section" style="display: none;">
+                <h1 class="content-title">习近平新时代中国特色社会主义思想学生读本初中、高中网络培训</h1>
+                <p>【习近平新时代中国特色社会主义思想学生读本初中、高中网络培训】，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/习读本.png " alt="习读本图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://wp.pep.com.cn/web/index.php?/login/index/176" target="_blank">人教教师培训服务平台https://wp.pep.com.cn/web/index.php?/login/index/176   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">10月14</span>。
+                    
+                    </p>
+                </div>
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section8" class="content-section" style="display: none;">
+                <h1 class="content-title">学习公社</h1>
+                <p>【学习公社】里面项目多，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/学习公社.png " alt="学习公社图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://study.enaea.edu.cn/login.do" target="_blank">学习公社  https://study.enaea.edu.cn/login.do    可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">具体看单个培训项目</span>。
+                    
+                    </p>
+                </div>
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section9" class="content-section" style="display: none;">
+                <h1 class="content-title">山东教师教育网</h1>
+                <p>【山东教师教育网】里面项目多，这个培训对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/山东教师教育网.png " alt="山东教师教育网图片" class="content-image"><br>
+                
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号是<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://www.qlteacher.com/" target="_blank">山东省教师教育网 https://www.qlteacher.com/   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">11月31具体看单个培训项目</span>。
+                    
+                    </p>
+                </div>
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section10" class="content-section" style="display: none;">
+                <h1 class="content-title">2022年版新课标国家级示范培训</h1>
+                <p>【2022年版新课标国家级示范培训】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/国培示范.png " alt="2022年版新课标国家级示范培训图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://basic.smartedu.cn/teacherTraining/courseIndex?courseId=2a4f51b9-1086-4296-92d9-c4cf8ff00538&" target="_blank">国家中小学智慧教育平台https://basic.smartedu.cn/teacherTraining/courseIndex?courseId=2a4f51b9-1086-4296-92d9-c4cf8ff00538&   可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">9月30</span>。
+                    </p>
+                </div>
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section11" class="content-section" style="display: none;">
+                <h1 class="content-title">广东省教师继续教育公需课</h1>
+                <p>【广东省教师继续教育公需课】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/广东教师继续教育.png " alt="广东省教师继续教育公需课图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是身份证号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://jsglpt.gdedu.gov.cn/login.jsp  " target="_blank">广东省教师继续教育信息管理平台   https://jsglpt.gdedu.gov.cn/login.jsp     可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">26年4月30</span>。
+                    </p>
+                </div>
+
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section12" class="content-section" style="display: none;">
+                <h1 class="content-title">甘肃酒泉市专技继续教育公需课、专业课</h1>
+                <p>【甘肃酒泉市专技继续教育公需课、专业课】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/甘肃酒泉继续教育.png " alt="甘肃酒泉市专技继续教育公需课、专业课图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="https://jqzj.ssxt.net.cn/public" target="_blank">酒泉市专业技术人员继续教育培训平台   https://jqzj.ssxt.net.cn/public    可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">8月31</span>。
+                    </p>
+                </div>
+
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section13" class="content-section" style="display: none;">
+                <h1 class="content-title">甘肃新科技专修学院继续教育公需课、专业课</h1>
+                <p>【甘肃新科技专修学院继续教育公需课、专业课】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/甘肃新科技.png " alt="甘肃新科技专修学院继续教育公需课、专业课图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是身份证号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href="http://gszj.edufe.cn/ " target="_blank">甘肃新科技专修学院   http://gszj.edufe.cn/     可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">12月31</span>。
+                    </p>
+                </div>
+
+
+
+              
+                <!-- 其他内容省略 -->
+            </div>
+            
+            <div id="section14" class="content-section" style="display: none;">
+                <h1 class="content-title">枣庄市专业技术人员继续教育公需课</h1>
+                <p>【枣庄市专业技术人员继续教育公需课】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/枣庄继续教育.png " alt="枣庄市专业技术人员继续教育公需课图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是身份证号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href=" https://zzzj.yxlearning.com/ " target="_blank">枣庄市专业技术人员继续教育服务平台    https://zzzj.yxlearning.com/     可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">12月31</span>。
+                    </p>
+                </div>
+                      
+                <!-- 其他内容省略 -->
+            </div>
+
+              
+            <div id="section15" class="content-section" style="display: none;">
+                <h1 class="content-title">2025宿州中小学转岗教师培训</h1>
+                <p>【2025宿州中小学转岗教师培训】，这个证书学分对以后评职称，评优非常重要，务必重视！</p>
+                <img src="imgs/宿州转岗.png " alt="甘肃新科技专修学院继续教育公需课、专业课图片" class="content-image">
+                <div class="custom-item">
+                    <p><br>
+                       <span style="font-weight: 600;font-size: 20px;color: #4A5361;">要求：</span>
+                       提供<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">正确</span>的账号与密码，账号<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">是手机号</span>，不记得就<span style="color: #DD2C00;font-size: 20px;font-weight: 600;">在👇下方链接修改</span>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">培训网址🌐：</span><a href=" https://szxypx.px.chaoxing.com/portal/login " target="_blank">宿州学院培训平台    https://szxypx.px.chaoxing.com/portal/login     可直接点击</a>
+                       <br><span style="font-weight: 600;font-size: 20px;color: #4A5361;">截止时间⏰：</span><span style="color: #DD2C00;font-size: 20px;font-weight: 600;">9月30</span>。
+
+                    </p>
+                </div>
+                      
+                <!-- 其他内容省略 -->
+            </div>
+
+
+
+
+
+
+
+
+
+              
+        </main>
+    </div>
+
+    <script>
+        // 等待DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取导航链接和内容区域
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const searchInput = document.querySelector('.search-input');
+            const searchButton = document.querySelector('.search-button');
+            const searchResults = document.querySelector('.search-results');
+            const noResultModal = document.getElementById('noResultModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            // 收集所有课程名称和对应的链接
+            const courses = Array.from(navLinks).map(link => ({
+                name: link.textContent.trim(),
+                href: link.getAttribute('href'),
+                element: link
+            }));
+            
+            // 重置所有导航项的高亮状态
+            function resetNavHighlight() {
+                navLinks.forEach(link => {
+                    link.classList.remove('search-match');
+                });
+            }
+            
+            // 导航链接点击事件
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // 阻止默认跳转行为
+                    
+                    // 获取目标区域的ID
+                    const targetId = this.getAttribute('href');
+                    
+                    // 验证目标元素是否存在
+                    const targetElement = document.querySelector(targetId);
+                    if (!targetElement) {
+                        // 如果目标不存在，显示提示
+                        noResultModal.style.display = 'flex';
+                        return;
+                    }
+                    
+                    // 移除所有导航链接的active类
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    
+                    // 为当前点击的链接添加active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容区域
+                    contentSections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // 显示目标内容区域
+                    targetElement.style.display = 'block';
+                    
+                    // 在移动端，点击导航链接后收起菜单
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                    }
+                    
+                    // 滚动到当前激活的导航项
+                    scrollToActiveNavItem(this);
+                });
+            });
+            
+            // 滚动到激活的导航项
+            function scrollToActiveNavItem(element) {
+                if (!element || !sidebar) return;
+                
+                const elementTop = element.offsetTop;
+                const elementHeight = element.offsetHeight;
+                const sidebarHeight = sidebar.clientHeight;
+                
+                // 计算居中位置
+                const targetScrollTop = elementTop - (sidebarHeight / 2) + (elementHeight / 2);
+                
+                // 确保滚动位置在有效范围内
+                const maxScrollTop = sidebar.scrollHeight - sidebarHeight;
+                const scrollTop = Math.max(0, Math.min(targetScrollTop, maxScrollTop));
+                
+                // 使用平滑滚动
+                sidebar.scrollTo({
+                    top: scrollTop,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // 移动端菜单切换按钮事件
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                
+                // 菜单打开时，确保滚动条可用
+                if (sidebar.classList.contains('active')) {
+                    // 强制刷新滚动条状态
+                    setTimeout(() => {
+                        sidebar.scrollTop = 0;
+                    }, 10);
+                }
+            });
+            
+            // 窗口大小改变时的响应式处理
+            window.addEventListener('resize', function() {
+                // 在桌面端，确保侧边栏始终显示
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+          
+            
+            
+
+
+
+          
+            
+            // 搜索功能实现
+            function highlightMatch(text, searchTerm) {
+                // 如果搜索词为空，直接返回原文本
+                if (!searchTerm) return text;
+                
+                // 创建所有可能的相邻两字组合的正则表达式
+                const searchTerms = [];
+                for (let i = 0; i < searchTerm.length - 1; i++) {
+                    searchTerms.push(searchTerm.substr(i, 2));
+                }
+                
+                if (searchTerms.length === 0) {
+                    return text;
+                }
+                
+                // 创建正则表达式，全局匹配所有可能的两字组合
+                const regex = new RegExp(`(${searchTerms.join('|')})`, 'gi');
+                
+                // 替换匹配的部分，添加高亮标签
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            }
+            
+            function searchCourses(query) {
+                query = query.trim().toLowerCase();
+                
+                // 重置之前的搜索高亮
+                resetNavHighlight();
+                
+                // 如果查询为空，返回空结果
+                if (query.length < 2) {
+                    return [];
+                }
+                
+                // 生成查询的所有相邻两字组合
+                const queryPairs = [];
+                for (let i = 0; i < query.length - 1; i++) {
+                    queryPairs.push(query.substr(i, 2));
+                }
+                
+                // 查找匹配的课程
+                const results = courses.filter(course => {
+                    const courseName = course.name.toLowerCase();
+                    
+                    // 检查课程名称中是否包含查询中的任何相邻两字组合
+                    const isMatch = queryPairs.some(pair => courseName.includes(pair));
+                    
+                    // 如果是匹配项，添加高亮类
+                    if (isMatch) {
+                        course.element.classList.add('search-match');
+                    }
+                    
+                    return isMatch;
+                });
+                
+                // 如果有结果，滚动到第一个匹配项
+                if (results.length > 0) {
+                    // 在移动端确保菜单是展开的
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.add('active');
+                    }
+                    
+                    // 滚动到第一个匹配项
+                    scrollToActiveNavItem(results[0].element);
+                }
+                
+                return results;
+            }
+            
+            function displayResults(results, query) {
+                // 清空之前的结果
+                searchResults.innerHTML = '';
+                
+                // 如果没有结果，隐藏结果区域
+                if (results.length === 0) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                // 显示结果区域
+                searchResults.style.display = 'block';
+                
+                // 添加结果项
+                results.forEach(course => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = highlightMatch(course.name, query);
+                    
+                    // 点击结果项时跳转到对应的课程
+                    resultItem.addEventListener('click', () => {
+                        // 验证目标元素是否存在
+                        const targetElement = document.querySelector(course.href);
+                        if (targetElement) {
+                            // 模拟点击对应的导航链接
+                            course.element.click();
+                        } else {
+                            // 如果目标不存在，显示提示
+                            noResultModal.style.display = 'flex';
+                        }
+                        
+                        // 隐藏结果区域
+                        searchResults.style.display = 'none';
+                        
+                        // 清空搜索框
+                        searchInput.value = '';
+                        
+                        // 重置搜索高亮
+                        resetNavHighlight();
+                        
+                        // 在移动端，确保侧边栏收起
+                        if (window.innerWidth <= 768) {
+                            sidebar.classList.remove('active');
+                        }
+                    });
+                    
+                    searchResults.appendChild(resultItem);
+                });
+            }
+            
+            // 输入框实时搜索
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                const results = searchCourses(query);
+                displayResults(results, query);
+            });
+            
+            // 搜索按钮点击事件
+            searchButton.addEventListener('click', function() {
+                const query = searchInput.value.trim();
+                const results = searchCourses(query);
+                
+                if (results.length === 0 && query.length >= 2) {
+                    // 没有找到结果，显示弹窗
+                    noResultModal.style.display = 'flex';
+                    // 隐藏搜索结果
+                    searchResults.style.display = 'none';
+                    // 重置搜索高亮
+                    resetNavHighlight();
+                } else if (results.length > 0) {
+                    // 验证第一个结果的目标元素是否存在
+                    const targetElement = document.querySelector(results[0].href);
+                    if (targetElement) {
+                        // 有结果且目标存在，点击第一个结果
+                        results[0].element.click();
+                    } else {
+                        // 目标不存在，显示提示
+                        noResultModal.style.display = 'flex';
+                    }
+                    // 清空搜索框
+                    searchInput.value = '';
+                    // 隐藏结果区域
+                    searchResults.style.display = 'none';
+                    // 重置搜索高亮
+                    resetNavHighlight();
+                }
+            });
+            
+            // 点击关闭弹窗
+            closeModal.addEventListener('click', function() {
+                noResultModal.style.display = 'none';
+            });
+            
+            // 点击页面其他地方关闭搜索结果并重置高亮
+            document.addEventListener('click', function(e) {
+                const isClickInsideSearch = searchInput.contains(e.target) || 
+                                           searchButton.contains(e.target) || 
+                                           searchResults.contains(e.target);
+                
+                if (!isClickInsideSearch) {
+                    searchResults.style.display = 'none';
+                    // 只有在搜索框为空时才重置高亮
+                    if (!searchInput.value.trim()) {
+                        resetNavHighlight();
+                    }
+                }
+            });
+            
+            // 按Enter键执行搜索
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
