@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>牧之培训</title>
+    <title>牧之网课培训</title>
     <style>
         /* 全局样式设置 */
         * {
@@ -17,26 +17,26 @@
                 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
                 sans-serif;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing：灰度;
-            背景颜色: #f8f9fa; /* 浅白色背景 */
-            颜色: #333;
-            显示：伸缩;
-            弹性方向： 列;
-            最小高度：100vh;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8f9fa; /* 浅白色背景 */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
         /* 页面容器 */
-        .容器 {
-            显示：伸缩;
-            伸展：1;
-            宽度：100%;
-            最大宽度：1400像素;
-            边距：0 自动;
-            
+        .container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0px;
         }
         
         /* 左侧导航栏样式 */
-        .侧边栏 {
+        .sidebar {
             width: 300px;
             background-color: #ffffff;
             border-radius: 8px;
@@ -534,7 +534,7 @@
                 
                 <p>如果您有任何问题或需求，请随时<span class="blue-hover-text">
             微信联系
-            <img src="imgs/微信." alt="微信" class="hover-image"></span>，本站将竭诚为您服务。</p>
+            <img src="imgs/微信.png" alt="微信" class="hover-image"></span>，本站将竭诚为您服务。</p>
                    <br><p>    </p>
                    <br><p>    </p>     
                    <br><p>    </p>              
