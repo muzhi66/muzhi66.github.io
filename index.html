@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>牧之网课培训平台</title>
+    <title>牧之培训</title>
     <style>
         /* 全局样式设置 */
         * {
@@ -32,7 +32,7 @@
             width: 100%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0px;
         }
         
         /* 左侧导航栏样式 */
@@ -63,6 +63,21 @@
         .nav-items {
             list-style: none;
         }
+
+
+        /* 为“25”设置红色圆角背景 */
+        .year-tag {
+          /* 红色背景（可根据需求调整色值） */
+          background-color: #f21f1f; 
+          /* 圆角（4px-8px均为常用值，可按需修改） */
+          border-radius: 4px; 
+          /* 内边距：上下0，左右4px（避免文字挤到背景边缘） */
+          padding: 0 4px; 
+          /* 文字颜色（白色更醒目，若需黑色可删此句） */
+          color: #ffffff; 
+          /* 可选：微调与“年”的间距 */
+          margin-right: 2px; 
+          }
         
         /* 导航列表容器样式 - 添加分隔线并优化交互 */
         .nav-item {
@@ -218,8 +233,8 @@
         
         /* 内容文字样式 */
         .content p {
-            margin-bottom: 16px;
-            font-size: 1.2rem;/*文字大小*/
+            margin-bottom: 1px;
+            font-size: 1rem;/*文字大小*/
             line-height: 1.7;/*行高*/
             letter-spacing: 1px;
             color: #000;
@@ -341,7 +356,7 @@
             /* 调整容器布局 */
             .container {
                 flex-direction: column;
-                padding: 20px;
+                padding: 0px;
             }
             
             /* 显示移动端菜单按钮 */
@@ -459,9 +474,9 @@
         <!-- 移动端菜单按钮 -->
         <button class="menu-toggle">☰ 导航栏</button>
         
-        <!-- 左侧导航栏 -->
+        <!-- 左侧导航栏   <span class="year-tag">中间是文字  </span>                                                                       -->
         <aside class="sidebar">
-            <h2 class="nav-title">牧之网课培训平台</h2>
+            <h2 class="nav-title">      牧之网课培训</h2>
             <ul class="nav-items">
                 <li class="nav-item"><a href="#section1" class="nav-link active">首页</a></li>
                 <li class="nav-item"><a href="#section2" class="nav-link">25年暑假研修（中小学）</a></li>
@@ -510,7 +525,7 @@
                 <p>欢迎访问本网站！感谢您的信赖与支持。
                 <br>您可以通过<span style="font-weight: 900;font-size: 24px;color: #2B6FD5;">导航栏</span>，查看相关培训及详细内容，
                   也可在上方进行<span style="font-weight: 900;font-size: 24px;color: #2B6FD5;">搜索</span>。
-                  <br><span style="color: #FF6600;font-size: 20px;font-weight: bold;">如没有你要学的项目，请联系管理员</span>。</p>
+                  <br><span style="color: #FF6600;font-size: 18px;font-weight: bold;">如没有你要学的项目，请联系管理员</span>。</p>
                 <!--<img src="https://picsum.photos/id/1/800/400" alt="首页图片" class="content-image">-->
                 <div class="content-card">
                     <p>我们的宗旨是：<span style="color: #FF6600;font-size: 22px;font-weight: bold;">为教师们减负！把休息时间还给你们！！！绝对高效！诚信！</span>
@@ -520,7 +535,14 @@
                 <p>如果您有任何问题或需求，请随时<span class="blue-hover-text">
             微信联系
             <img src="imgs/微信.png" alt="微信" class="hover-image"></span>，本站将竭诚为您服务。</p>
+                   <br><p>    </p>
+                   <br><p>    </p>     
+                   <br><p>    </p>              
             </div>
+
+
+
+          
             
             <!-- 其他内容区域 -->
             <div id="section2" class="content-section" style="display: none;">
